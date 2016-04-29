@@ -1,0 +1,5 @@
+file( GLOB  cppfiles  master.cpp dll_factory.cpp utilities.cpp tld_object.cpp)
+add_library(hetld ${cppfiles})
+file( GLOB  cuheaders  *.hpp)
+file( GLOB  cufiles  mem_management.cu fast_detection.cu fast_tracking.cu)
+cuda_add_library(hetld_cu ${cufiles} ${cuheaders})
