@@ -63,10 +63,10 @@ std::string Gui::windowName()
     return m_window_name;
 }
 
-static string window_name;
-static CvFont font;
-static IplImage *img0;
-static IplImage *img1;
+//static string window_name;
+//static CvFont font;
+//static IplImage *img0;
+//static IplImage *img1;
 static CvPoint point;
 static CvRect *bb;
 static int drag = 0;
@@ -81,15 +81,15 @@ static void mouseHandler(int event, int x, int y, int flags, void *param)
     }
 
     /* user drag the mouse */
-    if(event == CV_EVENT_MOUSEMOVE && drag)
-    {
-        img1 = (IplImage *) cvClone(img0);
+    //if(event == CV_EVENT_MOUSEMOVE && drag)
+    //{
+    //    img1 = (IplImage *) cvClone(img0);
 
-        cvRectangle(img1, point, cvPoint(x, y), CV_RGB(255, 0, 0), 1, 8, 0);
+    //    cvRectangle(img1, point, cvPoint(x, y), CV_RGB(255, 0, 0), 1, 8, 0);
 
-        cvShowImage(window_name.c_str(), img1);
-        cvReleaseImage(&img1);
-    }
+    //    cvShowImage(window_name.c_str(), img1);
+    //    cvReleaseImage(&img1);
+    //}
 
     /* user release left button */
     if(event == CV_EVENT_LBUTTONUP && drag)
@@ -103,16 +103,17 @@ static void mouseHandler(int event, int x, int y, int flags, void *param)
 // --> problem: callback function mouseHandler as member!
 int getBBFromUser(IplImage *img, CvRect &rect, Gui *gui)
 {
-    window_name = gui->windowName();
+    string window_name = gui->windowName();
+    IplImage *img0;
     img0 = (IplImage *) cvClone(img);
     rect = cvRect(-1, -1, -1, -1);
     bb = &rect;
     bool correctBB = false;
-    cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX, 0.5, 0.5, 0, 1, 8);
+    //cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX, 0.5, 0.5, 0, 1, 8);
 
     cvSetMouseCallback(window_name.c_str(), mouseHandler, NULL);
-    cvPutText(img0, "Draw a bounding box and press Enter", cvPoint(0, 60),
-              &font, cvScalar(255, 255, 0));
+    //cvPutText(img0, "Draw a bounding box and press Enter", cvPoint(0, 60),
+    //          &font, cvScalar(255, 255, 0));
     cvShowImage(window_name.c_str(), img0);
 
     while(!correctBB)
@@ -124,7 +125,7 @@ int getBBFromUser(IplImage *img, CvRect &rect, Gui *gui)
             return PROGRAM_EXIT;
         }
 
-        if(((key == '\n') || (key == '\r') || (key == '\r\n')) && (bb->x != -1) && (bb->y != -1))
+        if(((key == '\n') || (key == '\r')) && (bb->x != -1) && (bb->y != -1))
         {
             correctBB = true;
         }
@@ -145,7 +146,6 @@ int getBBFromUser(IplImage *img, CvRect &rect, Gui *gui)
     cvSetMouseCallback(window_name.c_str(), NULL, NULL);
 
     cvReleaseImage(&img0);
-    cvReleaseImage(&img1);
 
     return SUCCESS;
 }
