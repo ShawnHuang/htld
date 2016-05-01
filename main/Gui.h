@@ -22,7 +22,8 @@
 
 #include <string>
 
-#include <opencv/highgui.h>
+#include <opencv2/opencv.hpp>
+//#include <opencv/highgui.h>
 
 #include "TLDGlobals.h"
 
@@ -35,7 +36,7 @@ public:
     Gui();
     ~Gui();
     void init();
-    void showImage(IplImage *image);
+    void showImage(cv::Mat *image);
     char getKey();
     std::string windowName();
 
@@ -50,7 +51,7 @@ private:
  * @param gui initialized gui
  * @return PROGRAM_EXIT if 'q' or 'Q' pressed, SUCCESS if everything went right
  */
-int getBBFromUser(IplImage *img, CvRect &rect, Gui *gui);
+int getBBFromUser(cv::Mat *img, CvRect &rect, Gui *gui);
 
 }
 

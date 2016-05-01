@@ -66,12 +66,16 @@ void Main::doWork()
 
     bool reuseFrameOnce = true;
 
-    IplImage *img;
-    while(imAcqHasMoreFrames(imAcq))
+    //IplImage *img;
+    cv::Mat img,grey;
+    cv::VideoCapture cap(0);
+    //while(imAcqHasMoreFrames(imAcq))
+    while(cap.isOpened())
     {
-        img = imAcqGetImg(imAcq);
-        Mat grey(img->height, img->width, CV_8UC1);
-        cvtColor(cvarrToMat(img), grey, CV_BGR2GRAY);
+        //img = imAcqGetImg(imAcq);
+        cap>>img;
+        //Mat grey(img->height, img->width, CV_8UC1);
+        cvtColor(img, grey, CV_BGR2GRAY);
 
         if(reuseFrameOnce)
         {
@@ -92,7 +96,7 @@ void Main::doWork()
 
             CvRect box;
 
-            if(getBBFromUser(img, box, gui) == PROGRAM_EXIT)
+            if(getBBFromUser(&img, box, gui) == PROGRAM_EXIT)
             {
                 return;
             }
@@ -107,13 +111,13 @@ void Main::doWork()
         else
         {
 
-            if(img == NULL)
-            {
-                printf("current image is NULL, assuming end of input.\n");
-                break;
-            }
+            //if(img == NULL)
+            //{
+            //    printf("current image is NULL, assuming end of input.\n");
+            //    break;
+            //}
 
-            tld->processImage(cvarrToMat(img));
+            tld->processImage(img);
         }
 
 
@@ -130,13 +134,13 @@ void Main::doWork()
             if(tld->currBB != NULL)
             {
                 CvScalar rectangleColor = (confident) ? blue : yellow;
-                cvRectangle(img, tld->currBB->tl(), tld->currBB->br(), rectangleColor, 8, 8, 0);
-
+                //cvRectangle(img, tld->currBB->tl(), tld->currBB->br(), rectangleColor, 8, 8, 0);
+                cv::rectangle(img, tld->currBB->tl(), tld->currBB->br(), rectangleColor, 8, 8, 0);
             }
 
             if(showOutput)
             {
-                gui->showImage(img);
+                gui->showImage(&img);
                 char key = gui->getKey();
 
                 if(key == 'q') break;
@@ -150,7 +154,7 @@ void Main::doWork()
                 {
                     CvRect box;
 
-                    if(getBBFromUser(img, box, gui) == PROGRAM_EXIT)
+                    if(getBBFromUser(&img, box, gui) == PROGRAM_EXIT)
                     {
                         break;
                     }
@@ -164,8 +168,8 @@ void Main::doWork()
         }
 
 
-      cvReleaseImage(&img);
-      img = NULL;
+      //cvReleaseImage(&img);
+      //img = NULL;
     }//End of while-Loop...
 
 	//resetOutputStream();

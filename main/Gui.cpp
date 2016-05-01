@@ -48,14 +48,15 @@ void Gui::init()
     cvMoveWindow(m_window_name.c_str(), 100, 100);
 }
 
-void Gui::showImage(IplImage *image)
+void Gui::showImage(cv::Mat *image)
 {
-    cvShowImage(m_window_name.c_str(), image);
+    //cvShowImage(m_window_name.c_str(), image);
+    cv::imshow(m_window_name.c_str(), *image);
 }
 
 char Gui::getKey()
 {
-    return cvWaitKey(10);
+    return cv::waitKey(10);
 }
 
 std::string Gui::windowName()
@@ -101,11 +102,11 @@ static void mouseHandler(int event, int x, int y, int flags, void *param)
 
 // TODO: member of Gui
 // --> problem: callback function mouseHandler as member!
-int getBBFromUser(IplImage *img, CvRect &rect, Gui *gui)
+int getBBFromUser(cv::Mat *img, CvRect &rect, Gui *gui)
 {
     string window_name = gui->windowName();
-    IplImage *img0;
-    img0 = (IplImage *) cvClone(img);
+    //IplImage *img0;
+    //img0 = (IplImage *) cvClone(img);
     rect = cvRect(-1, -1, -1, -1);
     bb = &rect;
     bool correctBB = false;
@@ -114,11 +115,12 @@ int getBBFromUser(IplImage *img, CvRect &rect, Gui *gui)
     cvSetMouseCallback(window_name.c_str(), mouseHandler, NULL);
     //cvPutText(img0, "Draw a bounding box and press Enter", cvPoint(0, 60),
     //          &font, cvScalar(255, 255, 0));
-    cvShowImage(window_name.c_str(), img0);
+    //cvShowImage(window_name.c_str(), img0);
+    cv::imshow(window_name.c_str(), *img);
 
     while(!correctBB)
     {
-        char key = cvWaitKey(0);
+        char key = cv::waitKey(0);
 
         if(tolower(key) == 'q')
         {
@@ -145,7 +147,7 @@ int getBBFromUser(IplImage *img, CvRect &rect, Gui *gui)
 
     cvSetMouseCallback(window_name.c_str(), NULL, NULL);
 
-    cvReleaseImage(&img0);
+    //cvReleaseImage(&img0);
 
     return SUCCESS;
 }
