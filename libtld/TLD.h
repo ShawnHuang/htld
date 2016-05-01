@@ -66,6 +66,7 @@ public:
     cv::Rect *prevBB;
     cv::Rect *currBB;
     float currConf;
+    float threshold;
     bool learning;
 
 	//*************for Image Warping...************
@@ -80,6 +81,7 @@ public:
     TLD();
     virtual ~TLD();
     void release();
+    bool isConf();
     void selectObject(const cv::Mat &img, cv::Rect *bb);
     void processImage(const cv::Mat &img);
     void writeToFile(const char *path);

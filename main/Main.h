@@ -27,16 +27,18 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+#include <opencv2/opencv.hpp>
 #include "TLD.h"
-#include "ImAcq.h"
+//#include "ImAcq.h"
 #include "Gui.h"
 
 class Main
 {
 public:
     tld::TLD *tld;
-    ImAcq *imAcq;
-    tld::Gui *gui;
+    //ImAcq *imAcq;
+    cv::VideoCapture *cap;    
+    //tld::Gui *gui;
     bool showOutput;
 	bool showTrajectory;
 	int trajectoryLength;

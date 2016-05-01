@@ -427,15 +427,15 @@ int Config::init(int argc, char **argv)
 
 int Config::configure(Main *main)
 {
-    ImAcq *imAcq = main->imAcq;
+    //ImAcq *imAcq = main->imAcq;
 
-    // imAcq
-    imAcq->method = m_settings.m_method;
-    imAcq->imgPath = (m_settings.m_imagePath.empty()) ? NULL : m_settings.m_imagePath.c_str();
-    imAcq->lastFrame = m_settings.m_lastFrame;
-    imAcq->currentFrame = m_settings.m_startFrame;
-    imAcq->camNo = m_settings.m_camNo;
-    imAcq->fps = m_settings.m_fps;
+    //// imAcq
+    //imAcq->method = m_settings.m_method;
+    //imAcq->imgPath = (m_settings.m_imagePath.empty()) ? NULL : m_settings.m_imagePath.c_str();
+    //imAcq->lastFrame = m_settings.m_lastFrame;
+    //imAcq->currentFrame = m_settings.m_startFrame;
+    //imAcq->camNo = m_settings.m_camNo;
+    //imAcq->fps = m_settings.m_fps;
 
     // main
     main->tld->trackerEnabled = m_settings.m_trackerEnabled;

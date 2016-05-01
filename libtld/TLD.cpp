@@ -48,6 +48,7 @@ TLD::TLD()
     learning = false;
     currBB = NULL;
     prevBB = new Rect(0,0,0,0);
+    threshold = 0.5;
 #ifdef USE_HTLD
 	hTLDMaster = NULL;
 	memMgr     = NULL;
@@ -120,6 +121,11 @@ void TLD::release()
         delete currBB;
         currBB = NULL;
     }
+}
+
+bool TLD::isConf()
+{
+    return (currConf >= threshold) ? TRUE : FALSE;
 }
 
 void TLD::storeCurrentData()
