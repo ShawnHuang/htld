@@ -68,12 +68,14 @@ void Main::doWork()
 
     //IplImage *img;
     cv::Mat img,grey;
-    cv::VideoCapture cap(0);
+    cv::VideoCapture cap("../Project/resources/three.mp4");
     //while(imAcqHasMoreFrames(imAcq))
     while(cap.isOpened())
     {
+        double t = (double)getTickCount();  
         //img = imAcqGetImg(imAcq);
         cap>>img;
+        resize(img,img, cv::Size(320, 180));
         //Mat grey(img->height, img->width, CV_8UC1);
         cvtColor(img, grey, CV_BGR2GRAY);
 
@@ -110,13 +112,6 @@ void Main::doWork()
         }
         else
         {
-
-            //if(img == NULL)
-            //{
-            //    printf("current image is NULL, assuming end of input.\n");
-            //    break;
-            //}
-
             tld->processImage(img);
         }
 
@@ -168,6 +163,8 @@ void Main::doWork()
         }
 
 
+      t=((double)getTickCount()-t)/((double)cvGetTickFrequency()*1000.);  
+      std::cout<<t<<"  ms     "<<1000/t<<"  fps"<<std::endl;  
       //cvReleaseImage(&img);
       //img = NULL;
     }//End of while-Loop...

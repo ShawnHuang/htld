@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 
     srand(main->seed);
 
-    imAcqInit(imAcq);
+    //imAcqInit(imAcq);
 
     if(main->showOutput)
     {
