@@ -36,7 +36,6 @@ using namespace cv;
 
 Main::Main()
 {
-    tld = new tld::TLD();
     showOutput = 1;
     threshold = 0.5;
 
@@ -53,93 +52,59 @@ Main::Main()
 
 Main::~Main()
 {
-    delete tld;
+    //delete tld;
     //imAcqFree(imAcq);
 }
 
 void Main::doWork()
 {
-	//Trajectory trajectory;
-
-    
+    tld::TLD *tld = new tld::TLD();
+    tld::TLD *tld2 = new tld::TLD();
+    tld::TLD *tld3 = new tld::TLD();
     //CvCapture* cap = cvCaptureFromCAM(0);
     CvCapture* cap; 
-    cap = cvCreateCameraCapture(0);
-    bool reuseFrameOnce = true;
+    //cap = cvCreateCameraCapture(0);
+    cap = cvCaptureFromAVI("../Project/resources/three.mp4");
 
     IplImage *img;
-    //while(imAcqHasMoreFrames(imAcq))
-    while(true)
+    while(cap)
     {
+        double t = (double)getTickCount();
+
         img = cvQueryFrame(cap);
-        Mat grey(img->height, img->width, CV_8UC1);
-        cvtColor(cvarrToMat(img), grey, CV_BGR2GRAY);
+        //Mat grey(img->height, img->width, CV_8UC1);
+        Mat output,grey;
+        output = cvarrToMat(img);
+        resize(output, output, Size(320,160));
+        cvtColor(output, grey, CV_BGR2GRAY);
 
-        if(reuseFrameOnce)
-        {
+        tld->process(grey);
+        tld2->process(grey);
+        tld3->process(grey);
 
-          tld->detectorCascade->imgWidth     = grey.cols;
-          tld->detectorCascade->imgHeight    = grey.rows;
-          tld->detectorCascade->imgWidthStep = grey.step;
-
-          tld->imBlurred                     = new cv::Mat(grey.rows, grey.cols, CV_8UC1);//To Allocate it Once...
-          tld->ppHolder                      = new cv::Mat(grey.rows, grey.cols, CV_8UC1);//To Allocate it Once...
-#ifdef USE_HTLD
-          //Initialize H-TLD...
-          tld->hTLDMaster                = createHETLDMasterModule(grey.cols, grey.rows, 2.0, true, true);
-          tld->detectorCascade->fastDet  = tld->hTLDMaster->getFastDet();
-          tld->medianFlowTracker->fastTr = tld->hTLDMaster->getFastTr();
-          tld->memMgr                    = tld->hTLDMaster->getMemModule();
-#endif
-
-            CvRect box;
-
-            if(getBBFromUser(img, box, gui) == PROGRAM_EXIT)
-            {
-                return;
-            }
-
-            Rect bb = Rect(box);
-
-            printf("Starting at %d %d %d %d\n", bb.x, bb.y, bb.width, bb.height);
-
-            tld->selectObject(grey, &bb);
-            reuseFrameOnce = false;
-        }
-        else
-        {
-
-            if(img == NULL)
-            {
-                printf("current image is NULL, assuming end of input.\n");
-                break;
-            }
-
-            tld->processImage(cvarrToMat(img));
-        }
-
-
-		int confident = (tld->currConf >= threshold) ? 1 : 0;
 
         if(showOutput)
         {
-
-            CvScalar yellow = CV_RGB(255, 255, 0);
-            CvScalar blue = CV_RGB(0, 0, 255);
-            CvScalar black = CV_RGB(0, 0, 0);
-            CvScalar white = CV_RGB(255, 255, 255);
+            cv::Scalar blue = cv::Scalar(0, 0, 255);
 
             if(tld->currBB != NULL)
             {
-                CvScalar rectangleColor = (confident) ? blue : yellow;
-                cvRectangle(img, tld->currBB->tl(), tld->currBB->br(), rectangleColor, 8, 8, 0);
-
+                cv::rectangle(output, tld->currBB->tl(), tld->currBB->br(), blue, 8, 8, 0);
             }
-
+            if(tld2->currBB != NULL)
+            {
+                cv::rectangle(output, tld2->currBB->tl(), tld2->currBB->br(), blue, 8, 8, 0);
+            }
+            if(tld3->currBB != NULL)
+            {
+                cv::rectangle(output, tld3->currBB->tl(), tld3->currBB->br(), blue, 8, 8, 0);
+            }
             if(showOutput)
             {
-                gui->showImage(img);
+                gui->showImage(output);
                 char key = gui->getKey();
+                //imshow("tld", output);
+                //char key = cv::waitKey(10);
 
                 if(key == 'q') break;
 
@@ -147,28 +112,38 @@ void Main::doWork()
                 {
                     //clear everything
                     tld->release();
+                    tld2->release();
+                    tld3->release();
                 }
                 if(key == 'r')
                 {
                     CvRect box;
 
-                    if(getBBFromUser(img, box, gui) == PROGRAM_EXIT)
+                    if(getBBFromUser(output, box, gui) == PROGRAM_EXIT)
                     {
                         break;
                     }
 
                     Rect r = Rect(box);
 
+                    if(tld->currBB == NULL)
                     tld->selectObject(grey, &r);
+                    else if(tld2->currBB == NULL)
+                    tld2->selectObject(grey, &r);
+                    else
+                    tld3->selectObject(grey, &r);
                 }
             }
 
         }
-      //cvReleaseImage(&img);
-      //img = NULL;
+        t=((double)getTickCount()-t)/((double)cvGetTickFrequency()*1000.);  
+        std::cout<<t<<"  ms     "<<1000/t<<"  fps"<<std::endl;
     }//End of while-Loop...
     cvReleaseCapture(&cap);
 
+  delete tld;
+  delete tld2;
+  delete tld3;
 	//resetOutputStream();
 #ifdef USE_HTLD
 	//Destroy H-TLD...

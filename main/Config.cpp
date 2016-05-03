@@ -438,7 +438,8 @@ int Config::configure(Main *main)
     //imAcq->fps = m_settings.m_fps;
 
     // main
-    main->tld->trackerEnabled = m_settings.m_trackerEnabled;
+    //main->tld->trackerEnabled = m_settings.m_trackerEnabled;
+    printf("main->tld->trackerEnabled : %d\n", m_settings.m_trackerEnabled);
     main->showOutput = m_settings.m_showOutput;
 	main->showTrajectory = (m_settings.m_trajectory) ? true : false;
 	main->trajectoryLength = m_settings.m_trajectory;
@@ -447,8 +448,10 @@ int Config::configure(Main *main)
     main->threshold = m_settings.m_threshold;
     main->showForeground = m_settings.m_showForeground;
     main->showNotConfident = m_settings.m_showNotConfident;
-    main->tld->alternating = m_settings.m_alternating;
-    main->tld->learningEnabled = m_settings.m_learningEnabled;
+    //main->tld->alternating = m_settings.m_alternating;
+    printf("main->tld->alternating : %d\n", m_settings.m_alternating);
+    //main->tld->learningEnabled = m_settings.m_learningEnabled;
+    printf("main->tld->learningEnabled : %d\n", m_settings.m_learningEnabled);
     main->selectManually = m_settings.m_selectManually;
     main->exportModelAfterRun = m_settings.m_exportModelAfterRun;
     main->modelExportFile = m_settings.m_modelExportFile.c_str();
@@ -466,21 +469,33 @@ int Config::configure(Main *main)
         }
     }
 
-    DetectorCascade *detectorCascade = main->tld->detectorCascade;
-    detectorCascade->varianceFilter->enabled = m_settings.m_varianceFilterEnabled;
-    detectorCascade->ensembleClassifier->enabled = m_settings.m_ensembleClassifierEnabled;
-    detectorCascade->nnClassifier->enabled = m_settings.m_nnClassifierEnabled;
+    //DetectorCascade *detectorCascade = main->tld->detectorCascade;
+    //detectorCascade->varianceFilter->enabled = m_settings.m_varianceFilterEnabled;
+    printf("detectorCascade->varianceFilter->enabled : %d\n", m_settings.m_varianceFilterEnabled);
+    //detectorCascade->ensembleClassifier->enabled = m_settings.m_ensembleClassifierEnabled;
+    printf("detectorCascade->ensembleClassifier->enabled : %d\n", m_settings.m_ensembleClassifierEnabled);
+    //detectorCascade->nnClassifier->enabled = m_settings.m_nnClassifierEnabled;
+    printf("detectorCascade->nnClassifier->enabled : %d\n", m_settings.m_nnClassifierEnabled);
 
     // classifier
-    detectorCascade->useShift = m_settings.m_useProportionalShift;
-    detectorCascade->shift = m_settings.m_proportionalShift;
-    detectorCascade->minScale = m_settings.m_minScale;
-    detectorCascade->maxScale = m_settings.m_maxScale;
-    detectorCascade->minSize = m_settings.m_minSize;
-    detectorCascade->numTrees = m_settings.m_numTrees;
-    detectorCascade->numFeatures = m_settings.m_numFeatures;
-    detectorCascade->nnClassifier->thetaTP = m_settings.m_thetaP;
-    detectorCascade->nnClassifier->thetaFP = m_settings.m_thetaN;
+    //detectorCascade->useShift = m_settings.m_useProportionalShift;
+    printf("detectorCascade->useShift : %d\n", m_settings.m_useProportionalShift);
+    //detectorCascade->shift = m_settings.m_proportionalShift;
+    printf("detectorCascade->shift : %f\n", m_settings.m_proportionalShift);
+    //detectorCascade->minScale = m_settings.m_minScale;
+    printf("detectorCascade->minScale : %d\n", m_settings.m_minScale);
+    //detectorCascade->maxScale = m_settings.m_maxScale;
+    printf("detectorCascade->maxScale : %d\n", m_settings.m_maxScale);
+    //detectorCascade->minSize = m_settings.m_minSize;
+    printf("detectorCascade->minSize : %d\n", m_settings.m_minSize);
+    //detectorCascade->numTrees = m_settings.m_numTrees;
+    printf("detectorCascade->numTrees : %d\n", m_settings.m_numTrees);
+    //detectorCascade->numFeatures = m_settings.m_numFeatures;
+    printf("detectorCascade->numFeatures : %d\n", m_settings.m_numFeatures);
+    //detectorCascade->nnClassifier->thetaTP = m_settings.m_thetaP;
+    printf("detectorCascade->nnClassifier->thetaTP : %f\n", m_settings.m_thetaP);
+    //detectorCascade->nnClassifier->thetaFP = m_settings.m_thetaN;
+    printf("detectorCascade->nnClassifier->thetaFP : %f\n", m_settings.m_thetaN);
 
     return SUCCESS;
 }

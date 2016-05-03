@@ -27,6 +27,7 @@
 #ifndef TLD_H_
 #define TLD_H_
 
+#include <opencv2/opencv.hpp>
 #include <opencv/cv.h>
 
 #include "TLDGlobals.h"//Declare First for Compiler Options...
@@ -67,6 +68,7 @@ public:
     cv::Rect *currBB;
     float currConf;
     bool learning;
+    bool initFirst;
 
 	//*************for Image Warping...************
 	cv::RNG rng;
@@ -81,7 +83,8 @@ public:
     virtual ~TLD();
     void release();
     void selectObject(const cv::Mat &img, cv::Rect *bb);
-    void processImage(const cv::Mat &img);
+    void process(const cv::Mat &img);
+    void processImage(const cv::Mat &grey_frame);
     void writeToFile(const char *path);
     void readFromFile(const char *path);
 };
