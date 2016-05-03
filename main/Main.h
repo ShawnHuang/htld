@@ -34,7 +34,7 @@
 class Main
 {
 public:
-    tld::TLD *tld;
+    //tld::TLD *tld;
     ImAcq *imAcq;
     tld::Gui *gui;
     bool showOutput;

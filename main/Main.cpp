@@ -23,6 +23,7 @@
  *      Author: Georg Nebehay
  */
 
+#include <opencv2/core/core.hpp>
 #include "Main.h"
 
 #include "ImAcq.h"
@@ -36,7 +37,6 @@ using namespace cv;
 
 Main::Main()
 {
-    tld = new tld::TLD();
     showOutput = 1;
     threshold = 0.5;
 
@@ -53,68 +53,52 @@ Main::Main()
 
 Main::~Main()
 {
-    delete tld;
+    //delete tld;
     imAcqFree(imAcq);
 }
 
 void Main::doWork()
 {
-	//Trajectory trajectory;
 
-    
-
-
-    bool reuseFrameOnce = true;
-
+    tld::TLD *tld = new tld::TLD();
+    tld::TLD *tld2 = new tld::TLD();
+    tld::TLD *tld3 = new tld::TLD();
     //IplImage *img;
     cv::Mat img,grey;
     cv::VideoCapture cap("../Project/resources/three.mp4");
     //while(imAcqHasMoreFrames(imAcq))
+    int frame =0;
     while(cap.isOpened())
     {
         double t = (double)getTickCount();  
         //img = imAcqGetImg(imAcq);
+        printf("frame : %d\n", frame);
+        if (frame==22)
+        {
+           CvRect box;
+           box.x = 192;
+           box.y = 51;
+           box.width = 78;
+           box.height = 76;
+           Rect r = Rect(box);
+           printf("Starting at %d %d %d %d\n", r.x, r.y, r.width, r.height);
+           if(tld->currBB == NULL)
+             tld->selectObject(grey, &r);
+           else if(tld2->currBB == NULL)
+             tld2->selectObject(grey, &r);
+           else
+             tld3->selectObject(grey, &r);
+        }
+        frame++;
         cap>>img;
         resize(img,img, cv::Size(320, 180));
         //Mat grey(img->height, img->width, CV_8UC1);
         cvtColor(img, grey, CV_BGR2GRAY);
 
-        if(reuseFrameOnce)
-        {
 
-          tld->detectorCascade->imgWidth     = grey.cols;
-          tld->detectorCascade->imgHeight    = grey.rows;
-          tld->detectorCascade->imgWidthStep = grey.step;
-
-          tld->imBlurred                     = new cv::Mat(grey.rows, grey.cols, CV_8UC1);//To Allocate it Once...
-          tld->ppHolder                      = new cv::Mat(grey.rows, grey.cols, CV_8UC1);//To Allocate it Once...
-#ifdef USE_HTLD
-          //Initialize H-TLD...
-          tld->hTLDMaster                = createHETLDMasterModule(grey.cols, grey.rows, 2.0, true, true);
-          tld->detectorCascade->fastDet  = tld->hTLDMaster->getFastDet();
-          tld->medianFlowTracker->fastTr = tld->hTLDMaster->getFastTr();
-          tld->memMgr                    = tld->hTLDMaster->getMemModule();
-#endif
-
-            CvRect box;
-
-            if(getBBFromUser(&img, box, gui) == PROGRAM_EXIT)
-            {
-                return;
-            }
-
-            Rect bb = Rect(box);
-
-            printf("Starting at %d %d %d %d\n", bb.x, bb.y, bb.width, bb.height);
-
-            tld->selectObject(grey, &bb);
-            reuseFrameOnce = false;
-        }
-        else
-        {
-            tld->processImage(img);
-        }
-
+        tld->process(grey);
+        tld2->process(grey);
+        tld3->process(grey);
 
 		int confident = (tld->currConf >= threshold) ? 1 : 0;
 
@@ -132,7 +116,18 @@ void Main::doWork()
                 //cvRectangle(img, tld->currBB->tl(), tld->currBB->br(), rectangleColor, 8, 8, 0);
                 cv::rectangle(img, tld->currBB->tl(), tld->currBB->br(), rectangleColor, 8, 8, 0);
             }
-
+            if(tld2->currBB != NULL)
+            {
+                CvScalar rectangleColor = (confident) ? blue : yellow;
+                //cvRectangle(img, tld->currBB->tl(), tld->currBB->br(), rectangleColor, 8, 8, 0);
+                cv::rectangle(img, tld2->currBB->tl(), tld2->currBB->br(), rectangleColor, 8, 8, 0);
+            }
+            if(tld3->currBB != NULL)
+            {
+                CvScalar rectangleColor = (confident) ? blue : yellow;
+                //cvRectangle(img, tld->currBB->tl(), tld->currBB->br(), rectangleColor, 8, 8, 0);
+                cv::rectangle(img, tld3->currBB->tl(), tld3->currBB->br(), rectangleColor, 8, 8, 0);
+            }
             if(showOutput)
             {
                 gui->showImage(&img);
@@ -147,16 +142,25 @@ void Main::doWork()
                 }
                 if(key == 'r')
                 {
+
+                    //if(getBBFromUser(&img, box, gui) == PROGRAM_EXIT)
+                    //{
+                    //    break;
+                    //}
+
                     CvRect box;
-
-                    if(getBBFromUser(&img, box, gui) == PROGRAM_EXIT)
-                    {
-                        break;
-                    }
-
+                    box.x = 192;
+                    box.y = 51;
+                    box.width = 78;
+                    box.height = 76;
                     Rect r = Rect(box);
-
-                    tld->selectObject(grey, &r);
+                    printf("Starting at %d %d %d %d\n", r.x, r.y, r.width, r.height);
+                    if(tld->currBB == NULL)
+                      tld->selectObject(grey, &r);
+                    else if(tld2->currBB == NULL)
+                      tld2->selectObject(grey, &r);
+                    else
+                      tld3->selectObject(grey, &r);
                 }
             }
 
@@ -169,9 +173,4 @@ void Main::doWork()
       //img = NULL;
     }//End of while-Loop...
 
-	//resetOutputStream();
-#ifdef USE_HTLD
-	//Destroy H-TLD...
-	destroyHETLDMasterModule(tld->hTLDMaster);
-#endif
 }

@@ -67,6 +67,7 @@ public:
     cv::Rect *currBB;
     float currConf;
     bool learning;
+    bool initFirst;
 
 	//*************for Image Warping...************
 	cv::RNG rng;
@@ -81,6 +82,7 @@ public:
     virtual ~TLD();
     void release();
     void selectObject(const cv::Mat &img, cv::Rect *bb);
+    void process(const cv::Mat &img);
     void processImage(const cv::Mat &img);
     void writeToFile(const char *path);
     void readFromFile(const char *path);

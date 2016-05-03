@@ -46,6 +46,7 @@ TLD::TLD()
     valid = false;
     wasValid = false;
     learning = false;
+    initFirst = true;
     currBB = NULL;
     prevBB = new Rect(0,0,0,0);
 #ifdef USE_HTLD
@@ -109,6 +110,12 @@ TLD::~TLD()
 		delete ppHolder;
 		ppHolder = NULL;
 	}
+    //resetOutputStream();
+#ifdef USE_HTLD
+    //Destroy H-TLD...
+    destroyHETLDMasterModule(hTLDMaster);
+#endif
+
 }
 
 void TLD::release()
@@ -181,11 +188,38 @@ void TLD::selectObject(const Mat &img, Rect *bb)
 
 }
 
+void TLD:: process(const Mat &img)
+{
+    if (initFirst)
+    {
+          detectorCascade->imgWidth     = img.cols;
+          detectorCascade->imgHeight    = img.rows;
+          detectorCascade->imgWidthStep = img.step;
+
+          imBlurred                     = new cv::Mat(img.rows, img.cols, CV_8UC1);//To Allocate it Once...
+          ppHolder                      = new cv::Mat(img.rows, img.cols, CV_8UC1);//To Allocate it Once...
+#ifdef USE_HTLD
+          //Initialize H-TLD...
+          hTLDMaster                = createHETLDMasterModule(img.cols, img.rows, 2.0, true, true);
+          detectorCascade->fastDet  = hTLDMaster->getFastDet();
+          medianFlowTracker->fastTr = hTLDMaster->getFastTr();
+          memMgr                    = hTLDMaster->getMemModule();
+#endif
+
+        initFirst = false;
+    }
+    if(currBB)
+    {
+      processImage(img);
+    }
+}
+
 void TLD::processImage(const Mat &img)
 {
     storeCurrentData();
     Mat grey_frame;
-    cvtColor(img, grey_frame, CV_RGB2GRAY);
+    //cvtColor(img, grey_frame, CV_RGB2GRAY);
+    grey_frame = img;
     currImg = grey_frame; // Store new image , right after storeCurrentData();
 	
 #ifdef USE_HTLD

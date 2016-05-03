@@ -438,49 +438,49 @@ int Config::configure(Main *main)
     imAcq->fps = m_settings.m_fps;
 
     // main
-    main->tld->trackerEnabled = m_settings.m_trackerEnabled;
-    main->showOutput = m_settings.m_showOutput;
-	main->showTrajectory = (m_settings.m_trajectory) ? true : false;
-	main->trajectoryLength = m_settings.m_trajectory;
-    main->printResults = (m_settings.m_printResults.empty()) ? NULL : m_settings.m_printResults.c_str();
-    main->saveDir = (m_settings.m_outputDir.empty()) ? NULL : m_settings.m_outputDir.c_str();
-    main->threshold = m_settings.m_threshold;
-    main->showForeground = m_settings.m_showForeground;
-    main->showNotConfident = m_settings.m_showNotConfident;
-    main->tld->alternating = m_settings.m_alternating;
-    main->tld->learningEnabled = m_settings.m_learningEnabled;
-    main->selectManually = m_settings.m_selectManually;
-    main->exportModelAfterRun = m_settings.m_exportModelAfterRun;
-    main->modelExportFile = m_settings.m_modelExportFile.c_str();
-    main->loadModel = m_settings.m_loadModel;
-    main->modelPath = (m_settings.m_modelPath.empty()) ? NULL : m_settings.m_modelPath.c_str();
-    main->seed = m_settings.m_seed;
-
-    if(m_settings.m_initialBoundingBox.size() > 0)
-    {
-        main->initialBB = new int[4];
-
-        for(int i = 0; i < 4; i++)
-        {
-            main->initialBB[i] = m_settings.m_initialBoundingBox[i];
-        }
-    }
-
-    DetectorCascade *detectorCascade = main->tld->detectorCascade;
-    detectorCascade->varianceFilter->enabled = m_settings.m_varianceFilterEnabled;
-    detectorCascade->ensembleClassifier->enabled = m_settings.m_ensembleClassifierEnabled;
-    detectorCascade->nnClassifier->enabled = m_settings.m_nnClassifierEnabled;
-
-    // classifier
-    detectorCascade->useShift = m_settings.m_useProportionalShift;
-    detectorCascade->shift = m_settings.m_proportionalShift;
-    detectorCascade->minScale = m_settings.m_minScale;
-    detectorCascade->maxScale = m_settings.m_maxScale;
-    detectorCascade->minSize = m_settings.m_minSize;
-    detectorCascade->numTrees = m_settings.m_numTrees;
-    detectorCascade->numFeatures = m_settings.m_numFeatures;
-    detectorCascade->nnClassifier->thetaTP = m_settings.m_thetaP;
-    detectorCascade->nnClassifier->thetaFP = m_settings.m_thetaN;
+//    main->tld->trackerEnabled = m_settings.m_trackerEnabled;
+//    main->showOutput = m_settings.m_showOutput;
+//	main->showTrajectory = (m_settings.m_trajectory) ? true : false;
+//	main->trajectoryLength = m_settings.m_trajectory;
+//    main->printResults = (m_settings.m_printResults.empty()) ? NULL : m_settings.m_printResults.c_str();
+//    main->saveDir = (m_settings.m_outputDir.empty()) ? NULL : m_settings.m_outputDir.c_str();
+//    main->threshold = m_settings.m_threshold;
+//    main->showForeground = m_settings.m_showForeground;
+//    main->showNotConfident = m_settings.m_showNotConfident;
+//    main->tld->alternating = m_settings.m_alternating;
+//    main->tld->learningEnabled = m_settings.m_learningEnabled;
+//    main->selectManually = m_settings.m_selectManually;
+//    main->exportModelAfterRun = m_settings.m_exportModelAfterRun;
+//    main->modelExportFile = m_settings.m_modelExportFile.c_str();
+//    main->loadModel = m_settings.m_loadModel;
+//    main->modelPath = (m_settings.m_modelPath.empty()) ? NULL : m_settings.m_modelPath.c_str();
+//    main->seed = m_settings.m_seed;
+//
+//    if(m_settings.m_initialBoundingBox.size() > 0)
+//    {
+//        main->initialBB = new int[4];
+//
+//        for(int i = 0; i < 4; i++)
+//        {
+//            main->initialBB[i] = m_settings.m_initialBoundingBox[i];
+//        }
+//    }
+//
+//    DetectorCascade *detectorCascade = main->tld->detectorCascade;
+//    detectorCascade->varianceFilter->enabled = m_settings.m_varianceFilterEnabled;
+//    detectorCascade->ensembleClassifier->enabled = m_settings.m_ensembleClassifierEnabled;
+//    detectorCascade->nnClassifier->enabled = m_settings.m_nnClassifierEnabled;
+//
+//    // classifier
+//    detectorCascade->useShift = m_settings.m_useProportionalShift;
+//    detectorCascade->shift = m_settings.m_proportionalShift;
+//    detectorCascade->minScale = m_settings.m_minScale;
+//    detectorCascade->maxScale = m_settings.m_maxScale;
+//    detectorCascade->minSize = m_settings.m_minSize;
+//    detectorCascade->numTrees = m_settings.m_numTrees;
+//    detectorCascade->numFeatures = m_settings.m_numFeatures;
+//    detectorCascade->nnClassifier->thetaTP = m_settings.m_thetaP;
+//    detectorCascade->nnClassifier->thetaFP = m_settings.m_thetaN;
 
     return SUCCESS;
 }
