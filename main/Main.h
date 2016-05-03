@@ -28,14 +28,14 @@
 #define MAIN_H_
 
 #include "TLD.h"
-#include "ImAcq.h"
+//#include "ImAcq.h"
 #include "Gui.h"
 
 class Main
 {
 public:
     tld::TLD *tld;
-    ImAcq *imAcq;
+    //ImAcq *imAcq;
     tld::Gui *gui;
     bool showOutput;
 	bool showTrajectory;

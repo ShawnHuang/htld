@@ -25,7 +25,7 @@
 
 #include "Main.h"
 
-#include "ImAcq.h"
+//#include "ImAcq.h"
 #include "Gui.h"
 #include "TLDUtil.h"
 //#include "Trajectory.h"
@@ -48,13 +48,13 @@ Main::Main()
 
     gui = NULL;
     modelPath = NULL;
-    imAcq = NULL;
+    //imAcq = NULL;
 }
 
 Main::~Main()
 {
     delete tld;
-    imAcqFree(imAcq);
+    //imAcqFree(imAcq);
 }
 
 void Main::doWork()
@@ -62,14 +62,16 @@ void Main::doWork()
 	//Trajectory trajectory;
 
     
-
-
+    //CvCapture* cap = cvCaptureFromCAM(0);
+    CvCapture* cap; 
+    cap = cvCreateCameraCapture(0);
     bool reuseFrameOnce = true;
 
     IplImage *img;
-    while(imAcqHasMoreFrames(imAcq))
+    //while(imAcqHasMoreFrames(imAcq))
+    while(true)
     {
-        img = imAcqGetImg(imAcq);
+        img = cvQueryFrame(cap);
         Mat grey(img->height, img->width, CV_8UC1);
         cvtColor(cvarrToMat(img), grey, CV_BGR2GRAY);
 
@@ -162,11 +164,10 @@ void Main::doWork()
             }
 
         }
-
-
-      cvReleaseImage(&img);
-      img = NULL;
+      //cvReleaseImage(&img);
+      //img = NULL;
     }//End of while-Loop...
+    cvReleaseCapture(&cap);
 
 	//resetOutputStream();
 #ifdef USE_HTLD

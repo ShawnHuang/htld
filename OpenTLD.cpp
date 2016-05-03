@@ -23,7 +23,7 @@
 
 #include "Main.h"
 #include "Config.h"
-#include "ImAcq.h"
+//#include "ImAcq.h"
 #include "Gui.h"
 
 using namespace tld;
@@ -33,11 +33,11 @@ int main(int argc, char **argv)
 
     Config config;
 	Main *main   = new Main();
-    ImAcq *imAcq = imAcqAlloc();
+    //ImAcq *imAcq = imAcqAlloc();
     Gui *gui     = new Gui();
 
     main->gui   = gui;
-    main->imAcq = imAcq;
+    //main->imAcq = imAcq;
 
     if(config.init(argc, argv) == PROGRAM_EXIT)
     {
@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 
     srand(main->seed);
 
-    imAcqInit(imAcq);
+    //imAcqInit(imAcq);
 
     if(main->showOutput)
     {
