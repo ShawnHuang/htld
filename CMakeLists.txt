@@ -47,34 +47,22 @@ if(CUDA_FOUND)
 
   # add debugging to CUDA NVCC flags.  For NVidia's NSight tools.
   set(CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG} "-G")
-  set(USE_HTLD)
 
   #file( GLOB  hdr *.hpp *.h )
   #file( GLOB  cu  *.cu)
   #SET (HW1_files main.cpp reference_calc.cpp compare.cpp)
 
   include_directories (
-    ${PROJECT_SOURCE_DIR}
-    ${PROJECT_SOURCE_DIR}/main
-    ${PROJECT_SOURCE_DIR}/libtld
-    ${PROJECT_SOURCE_DIR}/imacq
-    ${PROJECT_SOURCE_DIR}/libtld/mftracker
-    ${PROJECT_SOURCE_DIR}/heterogenous_tld_lib
-    ${PROJECT_SOURCE_DIR}/3rdParties/libconfig/lib
-    ${PROJECT_SOURCE_DIR}/3rdParties/src/cub-1.3.1
-    /home/shawn/Dev/NVIDIA_CUDA-5.5_Samples/NVIDIA_CUDA-5.5_Samples/common/inc
+    ${PROJECT_SOURCE_DIR}/libhtld/libtld
+    ${PROJECT_SOURCE_DIR}/libhtld/libtld/mftracker
+    ${PROJECT_SOURCE_DIR}/libhtld/heterogenous_tld_lib
+    ${PROJECT_SOURCE_DIR}/libcub
     /usr/local/cuda/include
-    /usr/local/include/opencv
-    /usr/local/include
   )
-  add_subdirectory(${PROJECT_SOURCE_DIR}/main)
-  add_subdirectory(${PROJECT_SOURCE_DIR}/libtld)
-  add_subdirectory(${PROJECT_SOURCE_DIR}/imacq)
-  add_subdirectory(${PROJECT_SOURCE_DIR}/heterogenous_tld_lib)
-  add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParties/lib)
-  add_executable(run_main OpenTLD.cpp PPatchGenerator.cpp)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/libhtld)
+  add_executable(run_main OpenTLD.cpp)
   #CUDA_ADD_EXECUTABLE(run_main OpenTLD.cpp) # ${hdr} ${cu})
-  target_link_libraries(run_main main imacq libtld hetld hetld_cu ${OpenCV_LIBS} ${PROJECT_SOURCE_DIR}/3rdParties/lib/libconfig++.so)
+  target_link_libraries(run_main libtld hetld hetld_cu ${OpenCV_LIBS} ${CUDA_LIBRARIES})
 else(CUDA_FOUND)
   message("CUDA is not installed on this system.")
 endif()
