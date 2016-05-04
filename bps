@@ -1,0 +1,9 @@
+break *main
+break *0x4454ca
+break *0x44770c
+break Main::doWork()
+break *0x4477e9
+break TLD.cpp:tld::TLD::selectObject(cv::Mat const&, cv::Rect_<int>*)
+break *0x44b877
+break *0x44b941
+break *0x459d2f
